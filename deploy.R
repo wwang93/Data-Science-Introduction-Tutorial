@@ -3,7 +3,7 @@ library(shiny)
 library(rsconnect)
 
 # set up  ShinyApps.io  self account info
-rsconnect::setAccountInfo(name='vinowang',
+rsconnect::setAccountInfo(name='########your username',
                           token='#######your shinyapps.io info',
                           secret='######your secret')
 
