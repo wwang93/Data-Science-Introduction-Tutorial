@@ -1,0 +1,349 @@
+---
+title: "Data Science Introduction Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{css, echo=FALSE}
+.notice {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-left: 6px solid #ffcc00;
+  margin-bottom: 15px;
+}
+
+
+```{r setup, include=FALSE}
+library(learnr)
+library(readr)
+library(tidyverse)
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+tutorial_options(exercise.timelimit = 60)
+gradethis::gradethis_setup()
+March_Madness <- read.csv("March_Madness_Data.csv")
+tennessee_data <- March_Madness %>%
+  filter(TEAM == 'Tennessee', YEAR >= 2021, YEAR <= 2023) %>%
+  select(YEAR, TEAM, POWER.RATING)
+Purdue_data <- March_Madness %>%
+  filter(TEAM == 'Purdue', YEAR >= 2021, YEAR <= 2023)
+```
+
+
+## Outline
+
+In this tutorial, we learn about R and help you set up your first Data Science Trip!!! Are you Ready? Let's get started!
+
+-   Why R for Data Science?
+-   What can R do?
+-   Data Wrangling
+-   Data Visualization
+-   Be UT men basketball coach!!!
+
+## Why R for Data Science?
+
+R is a *free* and open-source programming language for statistical computing and graphics.
+The R Project for Statistical Computing (<https://www.r-project.org>) supports and develops R.
+
+**Why learn R for Data Science?**
+
+-   R is free and open-source. Because it is free, everyone has access to it! Because it is open-source, anyone can add functionality to R in the form of packages. Also, statisticians and computer scientist can can audit the code and edit any bugs (i.e., there is no black box).
+-   R is the *lingua franca* of statistics. In other words, it is the most common *data analysis tool*. Since R is the main computing environment for statistical analysis, both established and new methods in statistics, data mining, machine learning, and psychometrics are often employed using R, so there is no need for specialized software. Just learn R and you are ready to go.
+-   R has beautiful *data visualization* capabilities. We will learn the basics of making graphs in R in this microcredential. R has a wide variety of packages for data visualization, including `ggplot2`, `plotly`, and `lattice`.
+-   R has a great community! There are many talented R programmers that have contributed helpful R packages. In addition, there are great R mailing lists and Stack Overflow (<https://stackoverflow.com>) where you can find help using R.
+
+**R you ready?**
+
+The R community is made up of people passionate about the intersection of numbers, data, analysis, and code.
+It was invented by scientists for statistical computing and a community of specialized packages has been built around the language.
+In this first section, you will be introduced to some basic R syntax and discuss how R classifies data types so that it can mathematically process them in analysis.
+
+*Background Information:* Unlike with other programming languages, most beginners who want to learn R do so because they want to analyze data.
+In this way, R is more of a tool to understand data than a programming language used to build software applications.
+However, what we are learning will build the foundation for you to start programming in R.
+
+## What Can R do?
+
+**Mathematical calculations.** Let's start with the basic syntax for mathematical calculations in R.
+R performs addition, subtraction, multiplication, and division with +, -, \*, and / operators.
+
+<br> **Comments.** It's often good practice to annotate the code you write and not let the computer read it as code.
+We can annotate or write text in our coding scripts using comments.
+Comments are text written after a \# in a program that is not run by the computer.
+R interprets anything after a \# as a comment.
+A brief example is provided below demonstrating the use of comments.
+Run the following code using the blue "Run Code" button on the right.
+
+```{r  math_comment, exercise = TRUE}
+12 + 21 #this line of code sums 12 and 21
+
+```
+As you can see, the sum of 12 and 21 is shown when you run the code, but the comment is not displayed in the output.
+
+
+**Visualization.** we can use R to make simple plot, such as a bar plot, line plot, or scatter plot. We will use the `ggplot2` package to create these plots. The `ggplot2` package is a powerful and flexible package for creating visualizations in R. We will learn more about data visualization in the next section.
+Herw is an example of a simple bar plot using the `ggplot2` package. *Run the code* below to create a bar plot of the seed rating of the teams!!!
+
+```{r  barplot, exercise = TRUE,, exercise.eval = FALSE}
+
+# Create a data frame
+data <- data.frame(
+  team = c("Kansas", "Tennessee", "Duke", "Purdue"),
+  rating = c(98, 95, 92, 90))
+
+# Create a bar plot using ggplot2
+ggplot(data, aes(x = team, y = rating)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  labs(title = "Seed Rating of Teams", x = "Team", y = "Seed Rating") +
+  theme_minimal()
+```
+
+
+## Before Analysis:Be famliar with the *Dataset Codebook*
+
+Before we start our analysis, Make sure you are famliar with your dataset, the Codebook is a good start!!!
+The codebook is a document that provides information about the variables in a dataset. It describes each variable, the possible values it can take, and any other relevant information.
+The data set we will be using is the March_Madness Data, which contains information 
+about the University NCAA Men's Basketball team March Madness performance from 2016 to 2023.
+
+
+**March_Madness Codebook**
+
+- **YEAR**: sesson year（2016-2023）
+- **TEAM.NO**: university team number
+- **TEAM**: university team name
+- **SEED**: university team seed
+- **ROUND**: university team round 
+- **POWER.RATING**: university team power rating
+- **POWER.RATING.RANKING**: university team power rating ranking
+
+
+## Data Wrangling
+
+Data wrangling is the process of cleaning and transforming raw data into a more usable format.In R, the `dplyr` package is a powerful tool for data wrangling.
+It provides a set of functions that can be used to manipulate data frames.
+The `dplyr` package is part of the `tidyverse`, a collection of R packages designed for data science.
+
+Let's take a look at an example of data wrangling using the `dplyr` package.In this case,we will use NCAA men Baketball data(March_Madness) to demonstrate how to filter and select data using the `dplyr` package.
+
+
+### Viewing Data
+The first rule of data analysis is to view your data. This is important to ensure the data were read in properly and nothing odd is going on. We can accomplish this task with a few different functions in and outside of the tidyverse. Our favorite functions to view our data are the following:
+
+- `glimpse()` in the `tidyverse` package
+
+Lets go ahead and try `glimpse()`! *Run the code* below to view the data.
+
+```{r glimpse, exercise=TRUE, exercise.eval = FALSE}
+glimpse(March_Madness)
+```
+As you can see, `glimpse()` provides us with the some information of data for each of  variables. It even tells us the data type for each of the variables. This is a great way to get a quick overview of the data.
+
+
+### Basic `dplyr` verbs
+
+You can think of the functions within `dplyr` to manipulate data as *verbs*. The function names tells you what they do in terms of data manipulation. We've provided you with very basic two functions below along with their actions.
+
+- `filter()` filters columns based on a given value
+- `select()` selects columns to display in a data set
+
+Before we begin, we need to learn about the pipe.
+
+```{r pipe, echo=FALSE, out.width='50%', out.height='50%'}
+knitr::include_graphics(paste0(getwd(), "/images/pipe.png"))
+```
+
+Yes, that one! The pipe operator `%>%` is used to chain together multiple functions in R. It takes the output of one function and passes it as the first argument to the next function. This makes it easier to read and write code.
+
+#### `pipe()`
+
+More often than not, you will use multiple `dplyr` functions to wrangle your data into the shape you need. Since the `dplyr` functions take a data frame as the first argument, it would be inefficient to save each step as a new object. Plus, you'd have many different versions of a data frame in your global environment! Instead, we can use the piper operator `%>%` or `|>` to perform multiple data manipulations in one chunk of code. We like to think of the pipe operator as saying "and then" do this. We will provide an example below using the `filter()` function.
+
+#### `filter()`
+
+```{r filter, exercise=TRUE, exercise.eval = FALSE}
+filter(March_Madness, TEAM == 'Tennessee')
+
+March_Madness |>
+  filter(TEAM == 'Tennessee')
+```
+
+Let's talk about the first line of code. In this line, we don't use the pipe operator; instead we provide the name of the data set as the first argument for the `filter()` function, and we use a logical comparison for the second argument of the function by asking R to filter and only display observations where the  TEAM(team name) equals "Tennessee." 
+
+In the second line of code, we provide the name of the data set and use the pipe operator to then filter the team "Tennessee". For this code structure, we tell R to take the `March_Madness` object AND THEN (the pipe operator) filter the column `TEAM` which is Tennessee.
+
+We get the same result using both code structures above, but when we start to combine `dplyr` functions in a chunk of code, it will be more efficient to use the pipe operator.
+
+
+#### `select()`
+
+```{r select, exercise=TRUE, exercise.eval = FALSE}
+March_Madness |>
+  select(YEAR, TEAM, POWER.RATING)
+```
+
+In the code chunk above, we are asking R to select the columns YEAR, TEAM, and POWER RATING. Notice that we use backticks around the column name `POWER RATING` because it contains a space. This is a common practice when selecting columns with spaces in the name.
+
+
+### Reflect
+
+Let's take some time to reflect before moving on.
+What is one thing that surprised you?
+What is one thing that confused you?
+Did you learn anything that might be useful in the type of work you do?
+
+
+## Data Visualization - BE UT Men Basketball coach
+Now, let’s apply your R skills to a real-world dataset: the NCAA basketball March Madness. We'll analyze Tennessee Vols team  historical data to understand past performance and perhaps predict future outcomes.
+
+Analysis Introduction:
+
+In 2024, Tennessee achieved their best historical performance by reaching the Elite Eight in March Madness. They are now set to compete against Purdue University for a spot in the Final Four. As the coach, you have received data from your team's analysts, containing historical March Madness data for both your team and the opponent. Your task is to evaluate both teams' performances to devise a winning strategy.
+
+We'll explore how the power rating for the Tennessee team has changed over last three years in the March Madness tournaments. We'll also compare the performances between UT Vols and Purdue based on their power ratings.
+
+
+### Task 1: Tennessee Team Power Rating Analysis
+
+Explore how the power rating for the Tennessee team has changed over the years in the March Madness tournaments. Create a line plot to visualize the trend.
+
+**Steps:**
+
+1. Filter the dataset for team "Tennessee" and years 2021 to 2023.
+2. select the columns "YEAR","TEAM" and "POWER RATING".
+3. Plot the POWER RATING  over  past 3 years.
+
+```{r tennessee-PowerRating-trend, exercise=TRUE,, exercise.eval = FALSE}
+# Filter data for Tennessee and select relevant columns (YEAR, TEAM, POWER RATING) for years 2021 to 2023
+tennessee_data <- March_Madness %>%
+  filter(TEAM == 'Tennessee', YEAR >= 2021, YEAR <= 2023) %>%
+  select(YEAR, TEAM, POWER.RATING)
+
+# Plot Power Rating over the years using ggplot2 as a line plot
+ggplot(tennessee_data, aes(x = YEAR, y = POWER.RATING)) +
+  geom_line(color = "orange") + 
+  geom_point() +  
+  labs(title = "Tennessee Vols Power Rating Trend in past 3 years' March Madness", x = "Year", y = "Power Rating") +
+  theme_minimal()
+```
+
+### Task 2: Coach!! It's your Turn. Purdue Team Power Rating Analysis
+
+**object**：Explore the Purde performances by analyzing their Power Ratings.
+
+**Steps:**
+
+1. Filter the dataset for the Purdue university.
+2. Select the columns "TEAM","YEAR" and POWER.RATING.
+3. Create a bar plot to visualize the power ratings of Purdue .
+4.Try to think about the 2024 elite eight round result of Tennessee vs Purdue based on the power rating.
+
+
+Let's do!
+Step 1: Filter the dataset for Purdue University
+Filter the dataset for team "Purdue" and years 2021 to 2023.
+
+```{r  filter_data_for_Purdue, exercise = TRUE, exercise.eval = FALSE}
+ 
+
+```
+
+```{r  filter_data_for_Purdue-check}
+gradethis::grade_result(gradethis::pass_if(~identical(.result, Purdue_data <- March_Madness %>%
+  filter(TEAM == 'Purdue', YEAR >= 2021, YEAR <= 2023))))
+```
+
+```{r  filter_data_for_Purdue-hint}
+# Hint: Use the filter function from dplyr
+Purdue_data <- March_Madness %>%
+  filter(TEAM == 'Purdue', YEAR >= 2021, YEAR <= 2023)
+```
+
+```{r  filter_data_for_Purdue-solution}
+Purdue_data <- March_Madness %>%
+  filter(TEAM == 'Purdue', YEAR >= 2021, YEAR <= 2023)
+```
+
+Step 2: Select the columns "TEAM","YEAR" and POWER.RATING.
+
+```{r  select_the_relevant_columns, exercise = TRUE, exercise.eval = FALSE}
+ 
+
+```
+
+```{r  select_the_relevant_columns-check}
+gradethis::grade_result(gradethis::pass_if(~identical(.result, Purdue_data <- Purdue_data %>%
+  select(YEAR, TEAM, POWER.RATING))))
+```
+
+```{r  select_the_relevant_columns-hint}
+# Hint: Use the select function from dplyr
+Purdue_data <- Purdue_data %>%
+  select(YEAR, TEAM, POWER.RATING)
+```
+
+```{r  select_the_relevant_columns-solution}
+Purdue_data <- Purdue_data %>%
+  select(YEAR, TEAM, POWER.RATING)
+```
+
+
+Step 3: Create a line plot to visualize the power ratings of Purdue.
+
+```{r  create_lineplot_Purdue, exercise = TRUE, exercise.eval = FALSE}
+ 
+
+```
+
+```{r  create_lineplot_Purdue-check}
+gradethis::grade_result(gradethis::pass_if(~identical(.result, ggplot(Purdue_data, aes(x = YEAR, y = POWER.RATING)) +
+  geom_line(color = "blue") + 
+  geom_point(color = "blue"))))
+```
+
+```{r  create_lineplot_Purdue-hint}
+# Hint: Use ggplot2 to create the line plot
+ggplot(Purdue_data, aes(x = YEAR, y = POWER.RATING)) +
+  geom_line(color = "blue") + 
+  geom_point(color = "blue")
+```
+
+```{r  create_lineplot_Purdue-solution}
+ggplot(Purdue_data, aes(x = YEAR, y = POWER.RATING)) +
+  geom_line(color = "blue") + 
+  geom_point(color = "blue")
+```
+
+
+
+
+### Task 3: Compare Tennessee and Purdue Power Ratings
+Now: hand over to the team's analysts to compare the power ratings of Tennessee and Purdue over the years.Run the code below to compare the power ratings of Tennessee and Purdue over past 3 years.
+
+```{r power-rating-comparison, exercise=TRUE, exercise.eval = FALSE}
+# draw UT vols Power Rating
+p <- ggplot() +
+  geom_line(data = tennessee_data, aes(x = YEAR, y = POWER.RATING, color = "Tennessee"), size = 1) +
+  geom_point(data = tennessee_data, aes(x = YEAR, y = POWER.RATING, color = "Tennessee"))
+
+# add Purdue Power Rating
+p <- p + 
+  geom_line(data = Purdue_data, aes(x = YEAR, y = POWER.RATING, color = "Purdue"), size = 1) +
+  geom_point(data = Purdue_data, aes(x = YEAR, y = POWER.RATING, color = "Purdue"))
+
+# add labels and theme
+p <- p + labs(title = "Tennessee vs Purdue Power Rating Comparison in past 3 years' March Madness", 
+              x = "Year", 
+              y = "Power Rating", 
+              color = "Team") +
+  theme_minimal() +
+  scale_color_manual(values = c("Tennessee" = "orange", "Purdue" = "blue"))
+
+# print the plot
+print(p)
+
+
+```
+
+
+

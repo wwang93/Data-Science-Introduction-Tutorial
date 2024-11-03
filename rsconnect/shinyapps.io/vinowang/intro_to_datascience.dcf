@@ -1,0 +1,10 @@
+name: intro_to_datascience
+title:
+username: vinowang
+account: vinowang
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 12129212
+bundleId: 9309719
+url: https://vinowang.shinyapps.io/intro_to_datascience/
+version: 1
