@@ -4,8 +4,8 @@ library(rsconnect)
 
 # set up  ShinyApps.io  self account info
 rsconnect::setAccountInfo(name='vinowang',
-                          token='C446F2D73BA9A05D63F7B4C09BB42D02',
-                          secret='Eym/FRvOWl11Nc46gCglw969+CWDQUnVxF159NaK')
+                          token='#######your shinyapps.io info',
+                          secret='######your secret')
 
 # deploy your app
 deployApp(appDir = ".", 
